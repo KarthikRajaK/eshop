@@ -1,31 +1,31 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Category } from '../../models';
+import { Category } from '../../models/category';
 import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'products-categories-banner',
   templateUrl: './categories-banner.component.html',
-  styles: [
-  ]
+  styles: []
 })
 export class CategoriesBannerComponent implements OnInit, OnDestroy {
-
   categories: Category[] = [];
-  endsubs$: Subject<any> = new Subject();
+  endSubs$: Subject<any> = new Subject();
 
-  constructor(private categoryService: CategoriesService) { }
+  constructor(private categoriesService: CategoriesService) {}
 
   ngOnInit(): void {
-    this.categoryService.getCategories().pipe(takeUntil(this.endsubs$)).subscribe((categories) => {
-      this.categories = categories;
-    });
+    this.categoriesService
+      .getCategories()
+      .pipe(takeUntil(this.endSubs$))
+      .subscribe((categories) => {
+        this.categories = categories;
+      });
   }
 
-  ngOnDestroy(): void {
-    this.endsubs$.next();
-    this.endsubs$.complete();
+  ngOnDestroy() {
+    this.endSubs$.next();
+    this.endSubs$.complete();
   }
-
 }

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Product, ProductsService } from '@bluebits/products';
+import { ProductsService } from '@bluebits/products';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -8,55 +8,68 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'admin-products-list',
   templateUrl: './products-list.component.html',
-  styles: [
-  ]
+  styles: []
 })
 export class ProductsListComponent implements OnInit, OnDestroy {
+  products = [];
+  endsubs$: Subject<any> = new Subject();
 
-  products: Product[] = [];
-  endSubs$: Subject<any> = new Subject();
-
-  constructor(private productService: ProductsService, private confirmationService: ConfirmationService, private messageService: MessageService, private router: Router) { }
+  constructor(
+    private productsService: ProductsService,
+    private router: Router,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   ngOnInit(): void {
     this._getProducts();
   }
 
+  ngOnDestroy() {
+    this.endsubs$.next();
+    this.endsubs$.complete();
+  }
+
   private _getProducts() {
-    this.productService.getProducts().pipe(takeUntil(this.endSubs$)).subscribe((product) => {
-      this.products = product;
-    });
+    this.productsService
+      .getProducts()
+      .pipe(takeUntil(this.endsubs$))
+      .subscribe((products) => {
+        this.products = products;
+      });
+  }
+
+  updateProduct(productid: string) {
+    this.router.navigateByUrl(`products/form/${productid}`);
   }
 
   deleteProduct(productId: string) {
     this.confirmationService.confirm({
-      message: 'Do you want to delete this product ?',
-      header: 'Delete product',
+      message: 'Do you want to delete this Product?',
+      header: 'Delete Product',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.productService.deleteProduct(productId).pipe(takeUntil(this.endSubs$)).subscribe((response) => {
-          if(response) {
-            this.messageService.add({severity:'success', summary:'Success', detail:'Product deleted successfully!'});
-            this._getProducts();
-          }
-        }, () => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Unable to delete product!'
-            });
-        });
+        this.productsService
+          .deleteProduct(productId)
+          .pipe(takeUntil(this.endsubs$))
+          .subscribe(
+            () => {
+              this._getProducts();
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Product is deleted!'
+              });
+            },
+            () => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Product is not deleted!'
+              });
+            }
+          );
       }
     });
   }
-
-  updateProduct(productId: string) {
-    this.router.navigateByUrl(`products/form/${productId}`);
-  }
-
-  ngOnDestroy(): void {
-    this.endSubs$.next();
-    this.endSubs$.complete();
-  }
-
 }

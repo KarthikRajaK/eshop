@@ -4,11 +4,15 @@
     "defaultBase": "master"
   },
   "implicitDependencies": {
+    "angular.json": "*",
     "package.json": {
       "dependencies": "*",
       "devDependencies": "*"
     },
-    ".eslintrc.json": "*"
+    "tsconfig.base.json": "*",
+    "tslint.json": "*",
+    ".eslintrc.json": "*",
+    "nx.json": "*"
   },
   "tasksRunnerOptions": {
     "default": {
@@ -18,39 +22,31 @@
       }
     }
   },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  },
   "projects": {
-    "admin": {
-      "tags": []
-    },
-    "admin-e2e": {
-      "tags": [],
-      "implicitDependencies": ["admin"]
-    },
     "ngshop": {
-      "tags": []
+      "tags": ["scope: client"]
     },
     "ngshop-e2e": {
-      "tags": [],
+      "tags": ["scope: client"],
       "implicitDependencies": ["ngshop"]
     },
+    "admin": {
+      "tags": ["scope: client"]
+    },
+    "admin-e2e": {
+      "tags": ["scope: client"],
+      "implicitDependencies": ["admin"]
+    },
     "orders": {
-      "tags": []
+      "tags": ["scope:orders"]
     },
     "products": {
-      "tags": []
-    },
-    "ui": {
-      "tags": []
+      "tags": ["scope:products"]
     },
     "users": {
+      "tags": ["scope:users"]
+    },
+    "ui": {
       "tags": []
     }
   }

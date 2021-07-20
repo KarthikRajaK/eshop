@@ -1,15 +1,13 @@
-import { Product } from "./";
-
 export class Cart {
-    items?: CartItem[];
+  items?: CartItem[];
 }
 
 export class CartItem {
-    productId?: string;
-    quantity?: number;
+  productId?: string;
+  quantity?: number;
 }
 
 export class CartItemDetailed {
-    product?: Product;
-    quantity?: number;
+  product?: any;
+  quantity?: number;
 }

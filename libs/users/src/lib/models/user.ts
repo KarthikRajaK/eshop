@@ -1,14 +1,14 @@
 export class User {
     id?: string;
-    name?: string
-    email?: string;
+    name?: string;
     password?: string;
+    email: string;
     phone?: string;
     token?: string;
+    isAdmin?: true;
     street?: string;
     apartment?: string;
+    zip?: string;
     city?: string;
-    zip?: number;
     country?: string;
-    isAdmin?: string;
 }

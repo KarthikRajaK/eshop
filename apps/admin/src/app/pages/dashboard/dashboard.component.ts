@@ -10,26 +10,30 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  statistics = [];
+  endsubs$: Subject<any> = new Subject();
 
-  statistics: number[] = [];
-  endSubs$: Subject<any> = new Subject();
-
-  constructor(private orderService: OrdersService, private userService: UsersService, private productService: ProductsService) { }
+  constructor(
+    private userService: UsersService,
+    private productService: ProductsService,
+    private ordersService: OrdersService
+  ) {}
 
   ngOnInit(): void {
     combineLatest([
-      this.orderService.getOrdersCount(),
+      this.ordersService.getOrdersCount(),
       this.productService.getProductsCount(),
       this.userService.getUsersCount(),
-      this.orderService.getTotalSales()
-    ]).pipe(takeUntil(this.endSubs$)).subscribe((values) => {
-      this.statistics = values;
-    });
+      this.ordersService.getTotalSales()
+    ])
+      .pipe(takeUntil(this.endsubs$))
+      .subscribe((values) => {
+        this.statistics = values;
+      });
   }
 
-  ngOnDestroy(): void {
-    this.endSubs$.next();
-    this.endSubs$.complete();
+  ngOnDestroy() {
+    this.endsubs$.next();
+    this.endsubs$.complete();
   }
-
 }

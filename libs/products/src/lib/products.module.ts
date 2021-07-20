@@ -1,43 +1,51 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import {CheckboxModule} from 'primeng/checkbox';
-import {RatingModule} from 'primeng/rating';
-import {InputNumberModule} from 'primeng/inputnumber';
-import { UiModule } from '@bluebits/ui';
+import { OrdersModule } from '@bluebits/orders';
 import { ProductsSearchComponent } from './components/products-search/products-search.component';
 import { CategoriesBannerComponent } from './components/categories-banner/categories-banner.component';
+import { RouterModule, Routes } from '@angular/router';
 import { ProductItemComponent } from './components/product-item/product-item.component';
-import { FeaturedProductComponent } from './components/featured-product/featured-product.component';
+import { FeaturedProductsComponent } from './components/featured-products/featured-products.component';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { RatingModule } from 'primeng/rating';
 import { ProductsListComponent } from './pages/products-list/products-list.component';
+import { FormsModule } from '@angular/forms';
 import { ProductPageComponent } from './pages/product-page/product-page.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { UiModule } from '@bluebits/ui';
 
-const productRoutes: Routes = [
-  { path: 'products', component: ProductsListComponent },
-  { path: 'categories/:id', component: ProductsListComponent },
-  { path: 'products/:id', component: ProductPageComponent }
+const routes: Routes = [
+  {
+    path: 'products',
+    component: ProductsListComponent
+  },
+  {
+    path: 'category/:categoryid',
+    component: ProductsListComponent
+  },
+  {
+    path: 'products/:productid',
+    component: ProductPageComponent
+  }
 ];
-
 @NgModule({
   imports: [
-    CommonModule, 
-    FormsModule, 
-    ReactiveFormsModule,
-    RouterModule, 
+    CommonModule,
+    OrdersModule,
+    RouterModule.forChild(routes),
     ButtonModule,
     CheckboxModule,
+    FormsModule,
     RatingModule,
     InputNumberModule,
-    UiModule,
-    RouterModule.forChild(productRoutes)
+    UiModule
   ],
   declarations: [
     ProductsSearchComponent,
     CategoriesBannerComponent,
     ProductItemComponent,
-    FeaturedProductComponent,
+    FeaturedProductsComponent,
     ProductsListComponent,
     ProductPageComponent
   ],
@@ -45,7 +53,7 @@ const productRoutes: Routes = [
     ProductsSearchComponent,
     CategoriesBannerComponent,
     ProductItemComponent,
-    FeaturedProductComponent,
+    FeaturedProductsComponent,
     ProductsListComponent,
     ProductPageComponent
   ]

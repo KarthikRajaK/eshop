@@ -6,12 +6,11 @@ const TOKEN = 'jwtToken';
   providedIn: 'root'
 })
 export class LocalstorageService {
-
-  setToken(value: string) {
-    localStorage.setItem(TOKEN, value);
+  setToken(data) {
+    localStorage.setItem(TOKEN, data);
   }
 
-  getToken(): string | null {
+  getToken(): string {
     return localStorage.getItem(TOKEN);
   }
 

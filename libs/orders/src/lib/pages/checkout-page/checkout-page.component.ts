@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsersService } from '@bluebits/users';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Cart, Order } from '../../models';
+import { Cart } from '../../models/cart';
+import { Order } from '../../models/order';
 import { OrderItem } from '../../models/order-item';
 import { CartService } from '../../services/cart.service';
 import { OrdersService } from '../../services/orders.service';
@@ -13,20 +12,19 @@ import { OrdersService } from '../../services/orders.service';
   selector: 'orders-checkout-page',
   templateUrl: './checkout-page.component.html'
 })
-export class CheckoutPageComponent implements OnInit, OnDestroy {
+export class CheckoutPageComponent implements OnInit {
   constructor(
     private router: Router,
     private usersService: UsersService,
     private formBuilder: FormBuilder,
     private cartService: CartService,
-    private orderService: OrdersService
+    private ordersService: OrdersService
   ) {}
-  endSubs$: Subject<any> = new Subject();
-  checkoutFormGroup: FormGroup = {} as FormGroup;
+  checkoutFormGroup: FormGroup;
   isSubmitted = false;
   orderItems: OrderItem[] = [];
-  userId = '60ece05d109f583fe036b95c';
-  countries: any[] = [];
+  userId = '609d65943373711346c5e950';
+  countries = [];
 
   ngOnInit(): void {
     this._initCheckoutForm();
@@ -47,20 +45,18 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _getCountries() {
-    this.countries = this.usersService.getCountries();
-  }
-
   private _getCartItems() {
     const cart: Cart = this.cartService.getCart();
-    const tempOrder: any = cart.items?.map(item => {
+    this.orderItems = cart.items.map((item) => {
       return {
         product: item.productId,
         quantity: item.quantity
-      }
+      };
     });
-    this.orderItems = tempOrder;
-    console.log(this.orderItems);
+  }
+
+  private _getCountries() {
+    this.countries = this.usersService.getCountries();
   }
 
   backToCart() {
@@ -84,21 +80,21 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
       status: 0,
       user: this.userId,
       dateOrdered: `${Date.now()}`
-    }
-    this.orderService.createOrder(order).pipe(takeUntil(this.endSubs$)).subscribe(() => {
-      this.cartService.emptyCart();
-      this.router.navigate(['/success']);
-    }, () => {
+    };
 
-    });
+    this.ordersService.createOrder(order).subscribe(
+      () => {
+        //redirect to thank you page // payment
+        this.cartService.emptyCart();
+        this.router.navigate(['/success']);
+      },
+      () => {
+        //display some message to user
+      }
+    );
   }
 
   get checkoutForm() {
     return this.checkoutFormGroup.controls;
-  }
-
-  ngOnDestroy(): void {
-    this.endSubs$.next();
-    this.endSubs$.complete();    
   }
 }

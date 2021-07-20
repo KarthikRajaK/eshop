@@ -17,8 +17,8 @@
             <label for="email">Email</label>
             <input formControlName="email" id="email" type="text" pInputText />
             <small *ngIf="checkoutForm.email.invalid && isSubmitted" class="p-error"
-              ><span *ngIf="checkoutForm.email.errors?.required">email is required</span>
-              <span *ngIf="checkoutForm.email.errors?.email">email is invalid</span></small
+              ><span *ngIf="checkoutForm.email.errors.required">email is required</span>
+              <span *ngIf="checkoutForm.email.errors.email">email is invalid</span></small
             >
           </div>
           <div class="p-field p-col-4">
