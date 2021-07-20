@@ -1,0 +1,21 @@
+footer {
+    background-color: var(--blue-100);
+    border-radius: 15px;
+    color: var(--surface-600);
+    min-height: 50px;
+    padding: 10px 25px;
+    width: 100%;
+    margin-top: 25px;
+
+    .ft-wrapper {
+        align-items: center;
+
+        .social {
+            margin-top: 15px;
+            text-align: right;
+            .nav {
+                justify-content: flex-end;
+            }
+        }
+    }
+}
